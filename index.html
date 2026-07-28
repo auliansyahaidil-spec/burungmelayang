@@ -1,115 +1,20 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Burung Melayang</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-import pygame
-import random
+<h1>🐦 Burung Melayang</h1>
 
-# Inisialisasi
-pygame.init()
+<canvas id="gameCanvas" width="400" height="600"></canvas>
 
-# Ukuran layar
-LEBAR = 400
-TINGGI = 600
+<p>Tekan SPASI atau Klik untuk Terbang</p>
 
-layar = pygame.display.set_mode((LEBAR, TINGGI))
-pygame.display.set_caption("Burung Melayang")
+<script src="script.js"></script>
 
-# Warna
-LANGIT = (135, 206, 235)
-HIJAU = (34, 177, 76)
-KUNING = (255, 255, 0)
-
-clock = pygame.time.Clock()
-
-# Burung
-burung_x = 80
-burung_y = 250
-kecepatan = 0
-gravitasi = 0.5
-loncat = -8
-
-# Pipa
-lebar_pipa = 70
-celah = 180
-
-pipa = []
-
-def buat_pipa():
-    tinggi = random.randint(120, 350)
-    return {
-        "x": LEBAR,
-        "atas": tinggi,
-        "bawah": tinggi + celah
-    }
-
-pipa.append(buat_pipa())
-
-skor = 0
-font = pygame.font.SysFont(None, 36)
-
-jalan = True
-
-while jalan:
-
-    clock.tick(60)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            jalan = False
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                kecepatan = loncat
-
-    # Gerakan burung
-    kecepatan += gravitasi
-    burung_y += kecepatan
-
-    # Gerakan pipa
-    for p in pipa:
-        p["x"] -= 4
-
-    # Tambah pipa baru
-    if pipa[-1]["x"] < 220:
-        pipa.append(buat_pipa())
-
-    # Hapus pipa lama
-    if pipa[0]["x"] < -lebar_pipa:
-        pipa.pop(0)
-        skor += 1
-
-    # Gambar
-    layar.fill(LANGIT)
-
-    # Burung
-    pygame.draw.circle(layar, KUNING, (burung_x, int(burung_y)), 18)
-
-    # Pipa
-    for p in pipa:
-
-        pygame.draw.rect(
-            layar,
-            HIJAU,
-            (p["x"], 0, lebar_pipa, p["atas"])
-        )
-
-        pygame.draw.rect(
-            layar,
-            HIJAU,
-            (p["x"], p["bawah"], lebar_pipa, TINGGI)
-        )
-
-        # Tabrakan
-        if burung_x + 18 > p["x"] and burung_x - 18 < p["x"] + lebar_pipa:
-            if burung_y - 18 < p["atas"] or burung_y + 18 > p["bawah"]:
-                jalan = False
-
-    # Tabrakan lantai/langit
-    if burung_y > TINGGI or burung_y < 0:
-        jalan = False
-
-    # Skor
-    teks = font.render("Skor: " + str(skor), True, (0, 0, 0))
-    layar.blit(teks, (10, 10))
-
-    pygame.display.update()
-
-pygame.quit()
+</body>
+</html>
