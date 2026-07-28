@@ -1,1 +1,163 @@
-text
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// Burung
+let bird = {
+    x:80,
+    y:250,
+    width:30,
+    height:30,
+    gravity:0.6,
+    lift:-10,
+    velocity:0
+};
+
+let pipes=[];
+let score=0;
+let gameOver=false;
+
+// Membuat pipa
+function createPipe(){
+
+    let gap=150;
+
+    let topHeight=Math.random()*250+50;
+
+    pipes.push({
+        x:400,
+        width:60,
+        top:topHeight,
+        bottom:topHeight+gap
+    });
+
+}
+
+// Burung melompat
+function jump(){
+
+    if(gameOver){
+        location.reload();
+    }
+
+    bird.velocity=bird.lift;
+
+}
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.code==="Space"){
+        jump();
+    }
+
+});
+
+canvas.addEventListener("click",jump);
+
+// Update game
+function update(){
+
+    if(gameOver)return;
+
+    bird.velocity+=bird.gravity;
+    bird.y+=bird.velocity;
+
+    if(bird.y<0)bird.y=0;
+
+    if(bird.y+bird.height>canvas.height){
+        gameOver=true;
+    }
+
+    pipes.forEach(pipe=>{
+
+        pipe.x-=2;
+
+        if(
+            bird.x+bird.width>pipe.x &&
+            bird.x<pipe.x+pipe.width &&
+            (
+                bird.y<pipe.top ||
+                bird.y+bird.height>pipe.bottom
+            )
+        ){
+            gameOver=true;
+        }
+
+        if(pipe.x+pipe.width===bird.x){
+            score++;
+        }
+
+    });
+
+    pipes=pipes.filter(pipe=>pipe.x+pipe.width>0);
+
+}
+
+// Gambar game
+function draw(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Burung
+    ctx.fillStyle="yellow";
+    ctx.beginPath();
+    ctx.arc(
+        bird.x+15,
+        bird.y+15,
+        15,
+        0,
+        Math.PI*2
+    );
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle="black";
+    ctx.beginPath();
+    ctx.arc(bird.x+20,bird.y+12,2,0,Math.PI*2);
+    ctx.fill();
+
+    // Pipa
+    ctx.fillStyle="green";
+
+    pipes.forEach(pipe=>{
+
+        ctx.fillRect(pipe.x,0,pipe.width,pipe.top);
+
+        ctx.fillRect(
+            pipe.x,
+            pipe.bottom,
+            pipe.width,
+            canvas.height-pipe.bottom
+        );
+
+    });
+
+    // Skor
+    ctx.fillStyle="white";
+    ctx.font="30px Arial";
+    ctx.fillText("Skor : "+score,10,40);
+
+    if(gameOver){
+
+        ctx.fillStyle="red";
+        ctx.font="40px Arial";
+        ctx.fillText("GAME OVER",60,300);
+
+        ctx.font="20px Arial";
+        ctx.fillText("Klik atau Spasi untuk Restart",45,340);
+
+    }
+
+}
+
+setInterval(createPipe,2000);
+
+function gameLoop(){
+
+    update();
+    draw();
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+gameLoop();
