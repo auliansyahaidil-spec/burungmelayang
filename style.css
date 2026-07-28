@@ -1,163 +1,67 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const menu=document.getElementById("menu");
 
-// Burung
-let bird = {
-    x:80,
-    y:250,
-    width:30,
-    height:30,
-    gravity:0.6,
-    lift:-10,
-    velocity:0
-};
+const levelMenu=document.getElementById("levelMenu");
 
-let pipes=[];
-let score=0;
-let gameOver=false;
+const helpMenu=document.getElementById("helpMenu");
 
-// Membuat pipa
-function createPipe(){
+const canvas=document.getElementById("gameCanvas");
 
-    let gap=150;
+let level=1;
 
-    let topHeight=Math.random()*250+50;
+function startGame(){
 
-    pipes.push({
-        x:400,
-        width:60,
-        top:topHeight,
-        bottom:topHeight+gap
-    });
+menu.style.display="none";
+
+levelMenu.style.display="none";
+
+helpMenu.style.display="none";
+
+canvas.style.display="block";
+
+alert("Game Dimulai");
 
 }
 
-// Burung melompat
-function jump(){
+function showLevel(){
 
-    if(gameOver){
-        location.reload();
-    }
+menu.style.display="none";
 
-    bird.velocity=bird.lift;
+levelMenu.style.display="block";
 
 }
 
-document.addEventListener("keydown",(e)=>{
+function showHelp(){
 
-    if(e.code==="Space"){
-        jump();
-    }
+menu.style.display="none";
 
-});
-
-canvas.addEventListener("click",jump);
-
-// Update game
-function update(){
-
-    if(gameOver)return;
-
-    bird.velocity+=bird.gravity;
-    bird.y+=bird.velocity;
-
-    if(bird.y<0)bird.y=0;
-
-    if(bird.y+bird.height>canvas.height){
-        gameOver=true;
-    }
-
-    pipes.forEach(pipe=>{
-
-        pipe.x-=2;
-
-        if(
-            bird.x+bird.width>pipe.x &&
-            bird.x<pipe.x+pipe.width &&
-            (
-                bird.y<pipe.top ||
-                bird.y+bird.height>pipe.bottom
-            )
-        ){
-            gameOver=true;
-        }
-
-        if(pipe.x+pipe.width===bird.x){
-            score++;
-        }
-
-    });
-
-    pipes=pipes.filter(pipe=>pipe.x+pipe.width>0);
+helpMenu.style.display="block";
 
 }
 
-// Gambar game
-function draw(){
+function backMenu(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+menu.style.display="block";
 
-    // Burung
-    ctx.fillStyle="yellow";
-    ctx.beginPath();
-    ctx.arc(
-        bird.x+15,
-        bird.y+15,
-        15,
-        0,
-        Math.PI*2
-    );
-    ctx.fill();
+levelMenu.style.display="none";
 
-    // Mata
-    ctx.fillStyle="black";
-    ctx.beginPath();
-    ctx.arc(bird.x+20,bird.y+12,2,0,Math.PI*2);
-    ctx.fill();
-
-    // Pipa
-    ctx.fillStyle="green";
-
-    pipes.forEach(pipe=>{
-
-        ctx.fillRect(pipe.x,0,pipe.width,pipe.top);
-
-        ctx.fillRect(
-            pipe.x,
-            pipe.bottom,
-            pipe.width,
-            canvas.height-pipe.bottom
-        );
-
-    });
-
-    // Skor
-    ctx.fillStyle="white";
-    ctx.font="30px Arial";
-    ctx.fillText("Skor : "+score,10,40);
-
-    if(gameOver){
-
-        ctx.fillStyle="red";
-        ctx.font="40px Arial";
-        ctx.fillText("GAME OVER",60,300);
-
-        ctx.font="20px Arial";
-        ctx.fillText("Klik atau Spasi untuk Restart",45,340);
-
-    }
+helpMenu.style.display="none";
 
 }
 
-setInterval(createPipe,2000);
+function chooseLevel(l){
 
-function gameLoop(){
+level=l;
 
-    update();
-    draw();
+alert("Level "+level+" dipilih");
 
-    requestAnimationFrame(gameLoop);
+backMenu();
 
 }
 
-gameLoop();
+function exitGame(){
+
+alert("Terima kasih telah bermain.");
+
+window.close();
+
+}
