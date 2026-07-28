@@ -1,18 +1,66 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Burung Melayang</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burung Melayang</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>🐦 Burung Melayang</h1>
+<div id="menu">
 
-<canvas id="gameCanvas" width="400" height="600"></canvas>
+<img src="images/logo.png" class="logo">
 
-<p>Tekan SPASI atau Klik untuk Terbang</p>
+<h1>BURUNG MELAYANG</h1>
+
+<button onclick="startGame()">Mulai Bermain</button>
+
+<button onclick="showLevel()">Pilih Level</button>
+
+<button onclick="showHelp()">Cara Bermain</button>
+
+<button onclick="exitGame()">Keluar</button>
+
+</div>
+
+<div id="levelMenu" class="hidden">
+
+<h2>Pilih Level</h2>
+
+<button onclick="chooseLevel(1)">Level 1</button>
+<button onclick="chooseLevel(2)">Level 2</button>
+<button onclick="chooseLevel(3)">Level 3</button>
+
+<button onclick="backMenu()">
+Kembali
+</button>
+
+</div>
+
+<div id="helpMenu" class="hidden">
+
+<h2>Cara Bermain</h2>
+
+<p>
+
+Klik layar atau tekan tombol SPASI agar burung terbang.
+
+Hindari seluruh rintangan.
+
+Semakin tinggi level semakin cepat permainan.
+
+</p>
+
+<button onclick="backMenu()">
+Kembali
+</button>
+
+</div>
+
+<canvas id="gameCanvas" width="480" height="720"></canvas>
 
 <script src="script.js"></script>
 
